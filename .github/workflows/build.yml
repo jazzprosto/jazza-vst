@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+          - name: macOS
+            os: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        shell: bash
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        shell: bash
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Ad-hoc sign (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          codesign --force --deep --sign - build/TriFX_artefacts/Release/VST3/TriFX.vst3
+          codesign --force --deep --sign - build/TriFX_artefacts/Release/AU/TriFX.component
+          codesign --force --deep --sign - build/TriFX_artefacts/Release/Standalone/TriFX.app
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: TriFX-${{ matrix.name }}
+          path: |
+            build/TriFX_artefacts/Release/VST3
+            build/TriFX_artefacts/Release/AU
+            build/TriFX_artefacts/Release/Standalone
+          if-no-files-found: error
