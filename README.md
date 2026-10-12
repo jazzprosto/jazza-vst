@@ -1,5 +1,7 @@
 # TriFX
 
+> This repo also contains **[Jazza Chords](JazzaChords/)**, a chord progression instrument for FL Studio with drag-and-drop MIDI. It lives in its own folder with its own build.
+
 A VST3 effect plugin (also AU and Standalone on macOS) with three effects in series:
 
 **Distortion → Delay → Reverb**

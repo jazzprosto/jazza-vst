@@ -1,8 +1,10 @@
-name: Build
+name: Build TriFX
 
 on:
   push:
+    paths-ignore: [ "JazzaChords/**", ".github/workflows/build-jazza-chords.yml" ]
   pull_request:
+    paths-ignore: [ "JazzaChords/**", ".github/workflows/build-jazza-chords.yml" ]
   workflow_dispatch:
 
 jobs:
